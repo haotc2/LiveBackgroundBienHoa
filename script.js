@@ -261,3 +261,27 @@ function frame() {
 window.addEventListener("resize", handleResize);
 handleResize();
 frame();
+
+// Chặn hoàn toàn bôi đen, nhấp nháy con trỏ và menu chuột phải trên toàn màn hình
+document.addEventListener("contextmenu", (e) => e.preventDefault());
+document.addEventListener("selectstart", (e) => e.preventDefault());
+document.addEventListener("dragstart", (e) => e.preventDefault());
+
+// Tự động ẩn con trỏ chuột sau 2.5 giây khi không di chuyển (phù hợp trình chiếu màn LED)
+let cursorTimeout;
+window.addEventListener("mousemove", () => {
+  document.body.style.cursor = "default";
+  clearTimeout(cursorTimeout);
+  cursorTimeout = setTimeout(() => {
+    document.body.style.cursor = "none";
+  }, 2500);
+});
+
+// Nhấp đúp chuột bất kỳ đâu để bật / tắt chế độ toàn màn hình (Full Screen)
+window.addEventListener("dblclick", () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+});
